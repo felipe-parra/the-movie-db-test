@@ -3,14 +3,14 @@ export interface IMovieDetail {
   title: string;
 }
 
-interface IMovieSearchResult {
+export interface IMovieSearchResult {
   page: number;
   results: MovieResult[];
   total_pages: number;
   total_results: number;
 }
 
-interface MovieResult {
+export interface MovieResult {
   adult: boolean;
   backdrop_path: null | string;
   genre_ids: number[];

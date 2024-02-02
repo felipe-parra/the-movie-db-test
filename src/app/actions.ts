@@ -1,6 +1,6 @@
 "use server";
 import { config } from "@/config";
-import { IMovieSearchResult } from "@/schemas/movie.schema";
+import { IMovieSearchResult } from "@/interfaces/movie.interface";
 
 const url = "https://api.themoviedb.org/3/search/movie";
 
