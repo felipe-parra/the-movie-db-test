@@ -2,11 +2,12 @@
 import { Input } from './ui/input'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
-import { z } from "zod"
-import { Form } from './ui/form'
+import { Form, FormControl, FormField, FormItem } from './ui/form'
 import { Button } from './ui/button'
 import { SearchIcon } from 'lucide-react'
 import { SearchFormSchema, searchFormSchema } from '@/schemas/input.schema'
+import { useMovieStore } from '@/store/useMovieStore'
+import { useStore } from 'zustand'
 
 
 const INITIAL_STATE: SearchFormSchema = {
@@ -14,13 +15,17 @@ const INITIAL_STATE: SearchFormSchema = {
 }
 
 export default function SearchInput() {
+  const query = useStore(useMovieStore, (state) => state.query)
+  const updateQuery = useMovieStore((state) => state.updateQuery)
   const form = useForm<SearchFormSchema>({
     resolver: zodResolver(searchFormSchema),
-    defaultValues: INITIAL_STATE
+    defaultValues: {
+      searchQuery: query
+    }
   })
 
   const onSubmit = (data: SearchFormSchema) => {
-
+    updateQuery(data.searchQuery)
   }
 
   return (
@@ -28,18 +33,30 @@ export default function SearchInput() {
       <form onSubmit={form.handleSubmit(onSubmit)}
         className='max-w-md flex items-center justify-between'
       >
-        <Input
-          className='mr-1'
-          maxLength={10}
-          minLength={1}
-          placeholder='What are you movie looging for?'
+        <FormField
+          render={({ field }) => (
+            <FormItem className='w-full mr-1'>
+              <FormControl>
+                <Input
+                  className=''
+                  maxLength={10}
+                  minLength={1}
+                  placeholder='What are you movie looging for?'
+                  {...field}
+                  autoFocus
+                  size={12}
+                />
+              </FormControl>
+            </FormItem>
+          )}
+          name={'searchQuery'}
         />
 
-        <Button type='submit' className='flex items-center justify-between text-xs'>
+        <Button type='submit' className='flex items-center justify-between text-xs' size={"sm"}>
           <SearchIcon />
-          <span>
+          {/* <span>
             Buscar
-          </span>
+          </span> */}
         </Button>
       </form>
     </Form>
