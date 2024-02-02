@@ -1,4 +1,4 @@
-import { IMovie } from "@/interfaces/movie.interface";
+import { MovieResult } from "@/interfaces/movie.interface";
 import { create } from "zustand";
 import {
   PersistStorage,
@@ -11,11 +11,12 @@ import superjson from "superjson";
 export interface MovieState {
   query: string;
   count: number;
-  moviesResult: IMovie[];
-  favorites: IMovie[];
+  moviesResult: MovieResult[];
+  favorites: MovieResult[];
   addCount?: () => void;
-  addFavorite?: (newFavorite: IMovie) => void;
-  addMovies?: (movies: IMovie[]) => void;
+  addFavorite?: (newFavorite: MovieResult) => void;
+  addMovies?: (movies: MovieResult[]) => void;
+  updateQuery: (searchQuery: string) => void;
 }
 
 const storage: PersistStorage<MovieState> = {
@@ -41,10 +42,11 @@ const storage: PersistStorage<MovieState> = {
 };
 
 const initialtate: MovieState = {
-  query: "xs",
+  query: "",
   moviesResult: [],
   favorites: [],
   count: 0,
+  updateQuery: (searchQuery) => {},
 };
 
 export const useMovieStore = create<MovieState>()(
@@ -52,6 +54,7 @@ export const useMovieStore = create<MovieState>()(
     (set, get) => ({
       ...initialtate,
       addCount: () => set({ count: get().count + 1 }),
+      updateQuery: (querySearch: string) => set({ query: querySearch }),
       addFavorite(newFavorite) {
         set({
           favorites: [...get().favorites, newFavorite],
